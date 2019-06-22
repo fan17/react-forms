@@ -1,5 +1,5 @@
 import React from 'react';
-import { Formik, FormikActions, Form } from 'formik';
+import { Formik, FormikActions, Form, yupToFormErrors } from 'formik';
 import {
   Button,
   FormGroup,
@@ -9,16 +9,12 @@ import {
   Container,
   Col
 } from 'reactstrap';
+import * as yup from 'yup';
 
 interface Props {}
 
 interface State {
   initialValues: Values;
-}
-
-interface ValidationErrors {
-  title?: string;
-  descriptions?: string;
 }
 
 interface Values {
@@ -34,14 +30,12 @@ class FormikForm extends React.Component<Props, State> {
     }
   };
 
-  validate = (values: Values): ValidationErrors => {
-    const errors: ValidationErrors = {};
-    if (!values.title) {
-      errors.title = 'Required';
-    }
-
-    return errors;
-  };
+  validationSchema = yup.object().shape({
+    title: yup
+      .string()
+      .required()
+      .min(3)
+  });
 
   onSubmit = (values: Values, actions: FormikActions<Values>) => {
     setTimeout(() => {
@@ -57,7 +51,7 @@ class FormikForm extends React.Component<Props, State> {
         <h3>Article form</h3>
         <Formik
           initialValues={this.state.initialValues}
-          validate={this.validate}
+          validationSchema={this.validationSchema}
           onSubmit={this.onSubmit}
         >
           {({ isSubmitting, errors, handleChange, handleBlur, values }) => (
