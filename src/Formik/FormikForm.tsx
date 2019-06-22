@@ -1,5 +1,14 @@
 import React from 'react';
-import { Formik, FormikActions, Form, Field, ErrorMessage } from 'formik';
+import { Formik, FormikActions, Form } from 'formik';
+import {
+  Button,
+  FormGroup,
+  Label,
+  FormFeedback,
+  Input,
+  Container,
+  Col
+} from 'reactstrap';
 
 interface Props {}
 
@@ -26,7 +35,6 @@ class FormikForm extends React.Component<Props, State> {
   };
 
   validate = (values: Values): ValidationErrors => {
-    console.log('validate');
     const errors: ValidationErrors = {};
     if (!values.title) {
       errors.title = 'Required';
@@ -44,27 +52,63 @@ class FormikForm extends React.Component<Props, State> {
 
   render() {
     return (
-      <div>
+      <Container>
         <h2>FormikForm</h2>
-        <h3>Create / update / delete article</h3>
+        <h3>Article form</h3>
         <Formik
           initialValues={this.state.initialValues}
           validate={this.validate}
           onSubmit={this.onSubmit}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, errors, handleChange, handleBlur, values }) => (
             <Form>
-              <Field type="text" name="title" />
-              <ErrorMessage name="title" component="div" />
-              <Field type="textarea" name="description" />
-              <ErrorMessage name="description" component="div" />
-              <button type="submit" disabled={isSubmitting}>
-                Submit
-              </button>
+              <FormGroup row>
+                <Label for="title" sm={2}>
+                  Title
+                </Label>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    name="title"
+                    id="title"
+                    placeholder="type title..."
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.title}
+                    className={errors.title ? 'invalid' : undefined}
+                    invalid={!!errors.title}
+                  />
+                  {errors.title ? (
+                    <FormFeedback>{errors.title}</FormFeedback>
+                  ) : null}
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label for="description" sm={2}>
+                  Description
+                </Label>
+                <Col sm={10}>
+                  <Input
+                    type="textarea"
+                    name="description"
+                    id="description"
+                    placeholder="type description..."
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.description}
+                    className={errors.description ? 'invalid' : undefined}
+                    invalid={!!errors.description}
+                  />
+                  {errors.description ? (
+                    <FormFeedback>{errors.description}</FormFeedback>
+                  ) : null}
+                </Col>
+              </FormGroup>
+              <Button disabled={isSubmitting}>Submit</Button>
             </Form>
           )}
         </Formik>
-      </div>
+      </Container>
     );
   }
 }
