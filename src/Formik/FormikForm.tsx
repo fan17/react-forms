@@ -48,7 +48,6 @@ class FormikForm extends React.Component<Props, State> {
     return (
       <Container>
         <h2>FormikForm</h2>
-        <h3>Article form</h3>
         <Formik
           initialValues={this.state.initialValues}
           validationSchema={this.validationSchema}
